@@ -378,11 +378,11 @@ EOF
 
 echo "load response = $load_response"
 
-num_samples=50000000
-mandel_size=3000
-max_iter=2500
-num_intervals=50000000
-rt_size=1500
+num_samples=40000000
+mandel_size=4000
+max_iter=4000
+num_intervals=40000000
+rt_size=2000
 pw_len=6
 
 # lib run
