@@ -693,7 +693,7 @@ noextn="${time_parallel_analytics_file%.*}"
 time_parallel_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${time_parallel[@]}) name=time unit=seconds) \
 unoptimized=$(jo data=$(jo -a ${time_parallel_slow[@]}) name=time unit=seconds) \
 fitted=$(jo data="`jq '.fitted' time-parallel-fitted.json`" name=time unit=seconds) \
@@ -723,7 +723,7 @@ noextn="${space_parallel_analytics_file%.*}"
 space_parallel_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${space_parallel[@]}) name=memory unit=MB) \
 unoptimized=$(jo data=$(jo -a) name=memory unit=MB) \
 fitted=$(jo data="`jq '.fitted' space-parallel-fitted.json`" name=memory unit=MB) \
@@ -753,7 +753,7 @@ noextn="${power_parallel_analytics_file%.*}"
 power_parallel_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${power_parallel[@]}) name=power unit="watts") \
 fitted=$(jo data="`jq '.fitted' power-parallel-fitted.json`" name=power unit="watts") \
 unoptimized=$(jo data=$(jo -a) name=power unit="watts") \
@@ -783,7 +783,7 @@ noextn="${energy_parallel_analytics_file%.*}"
 energy_parallel_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${energy_parallel[@]}) name=energy unit="watt-seconds") \
 unoptimized=$(jo data=$(jo -a) name=energy unit="watt-seconds") \
 fitted=$(jo data="`jq '.fitted' energy-parallel-fitted.json`" name=energy unit="watt-seconds") \
@@ -798,7 +798,7 @@ noextn="${speedup_analytics_file%.*}"
 speedup_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${speedup[@]}) name='T1/Tcore' unit='') \
 unoptimized=$(jo data=$(jo -a) name='T1/Tcore' unit='') \
 fitted=$(jo data="`jq '.fitted' speedup-fitted.json`" name='T1/Tcore' unit='') \
@@ -813,7 +813,7 @@ noextn="${freeup_analytics_file%.*}"
 freeup_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${freeup[@]}) name='S1/Score' unit='') \
 unoptimized=$(jo data=$(jo -a) name='S1/Score' unit='') \
 fitted=$(jo data="`jq '.fitted' freeup-fitted.json`" name='S1/Score' unit='') \
@@ -828,7 +828,7 @@ noextn="${powerup_analytics_file%.*}"
 powerup_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${powerup[@]}) name='PowerEfficiency(P1/Pcore)' unit='') \
 unoptimized=$(jo data=$(jo -a) name='PowerEfficiency(P1/Pcore)' unit='') \
 fitted=$(jo data="`jq '.fitted' powerup-fitted.json`" name='PowerEfficiency(P1/Pcore)' unit='') \
@@ -843,7 +843,7 @@ noextn="${energyup_analytics_file%.*}"
 energyup_analytics_file_d="$noextn"."$extn"
 
 jo -p \
-iva=$(jo data=$(jo -a ${core[@]}) name=core unit=count) \
+iva="$(jo -a "$(jo data="$(jo -a ${core[@]})" name=core unit=count)")" \
 measurements=$(jo data=$(jo -a ${energyup[@]}) name='EnergyEfficiency(E1/Ecore)' unit='') \
 unoptimized=$(jo data=$(jo -a) name='EnergyEfficiency(E1/Ecore)' unit='') \
 fitted=$(jo data="`jq '.fitted' energyup-fitted.json`" name='EnergyEfficiency(E1/Ecore)' unit='') \
