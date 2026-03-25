@@ -90,7 +90,7 @@ void monte_carlo_pi(long num_samples) {
 typedef struct {
     int *iters;
     int width, height, max_iter;
-    int row_start, row_end;
+    int thread_id, stride;
     double x_min, x_max, y_min, y_max;
     long inside;
 } MandelChunk;
@@ -98,7 +98,7 @@ typedef struct {
 static void mandel_worker(void *arg) {
     MandelChunk *c = (MandelChunk *)arg;
     long inside = 0;
-    for (int py = c->row_start; py < c->row_end; py++) {
+    for (int py = c->thread_id; py < c->height; py += c->stride) {
         for (int px = 0; px < c->width; px++) {
             double cr = c->x_min + (c->x_max - c->x_min) * px / c->width;
             double ci = c->y_min + (c->y_max - c->y_min) * py / c->height;
@@ -127,7 +127,6 @@ void mandelbrot(int width, int height, int max_iter) {
     double y_min = -1.5, y_max = 1.5;
 
     MandelChunk *chunks = (MandelChunk *)malloc(num_threads * sizeof(MandelChunk));
-    int rows_per = height / num_threads;
 
     for (int i = 0; i < num_threads; i++) {
         chunks[i].iters = iters;
@@ -136,8 +135,8 @@ void mandelbrot(int width, int height, int max_iter) {
         chunks[i].max_iter = max_iter;
         chunks[i].x_min = x_min; chunks[i].x_max = x_max;
         chunks[i].y_min = y_min; chunks[i].y_max = y_max;
-        chunks[i].row_start = i * rows_per;
-        chunks[i].row_end = (i == num_threads - 1) ? height : (i + 1) * rows_per;
+        chunks[i].thread_id = i;
+        chunks[i].stride = num_threads;
         chunks[i].inside = 0;
     }
 
