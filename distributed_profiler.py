@@ -210,6 +210,7 @@ class DistributedProfiler:
         self.serial_progress = float(args.serial_progress)
         self.thmgr_progress = float(args.thmgr_progress)
         self.direct_progress = float(args.direct_progress)
+        self.skip_direct_profiling = str(getattr(args, 'skip_direct_profiling', 'false')).lower() == 'true'
         self.curve_progress = float(args.curve_progress)
         self.request_delay = float(args.request_delay)
 
@@ -696,26 +697,27 @@ class DistributedProfiler:
         elif group_name == "parallel_direct_measurements":
             parallel_iva = self.iva_values[-1] if self.iva_values else str(self.iva_data)
             for idx, core in enumerate(self.core_values):
-                parallel_time_args = [
-                    "bash",
-                    worker_path,
-                    "parallel_time",
-                    str(self.job_dir),
-                    str(self.temp_dir),
-                    self.algo,
-                    str(core),
-                    str(parallel_iva),
-                    str(idx),
-                ]
-                tasks.append(
-                    Task(
-                        name=f"parallel-time-{idx}",
-                        group=group_name,
-                        remote_args=parallel_time_args,
-                        timeout=timeout,
-                        retries=retries,
+                if not self.skip_direct_profiling:
+                    parallel_time_args = [
+                        "bash",
+                        worker_path,
+                        "parallel_time",
+                        str(self.job_dir),
+                        str(self.temp_dir),
+                        self.algo,
+                        str(core),
+                        str(parallel_iva),
+                        str(idx),
+                    ]
+                    tasks.append(
+                        Task(
+                            name=f"parallel-time-{idx}",
+                            group=group_name,
+                            remote_args=parallel_time_args,
+                            timeout=timeout,
+                            retries=retries,
+                        )
                     )
-                )
 
                 parallel_mem_args = [
                     "bash",
@@ -918,6 +920,10 @@ class DistributedProfiler:
         parallel_time_slow = self._read_measurement_series(
             "parallel_time_slow", len(core_numeric)
         )
+
+        if self.skip_direct_profiling:
+            parallel_time_slow = []
+
         parallel_space = self._read_measurement_series(
             "parallel_space", len(core_numeric)
         )
@@ -1081,6 +1087,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument(
         "--core_count_file", dest="core_count_file", help="Path to core count file"
     )
+    parser.add_argument("--skip-direct-profiling", default="false", help="Whether to skip direct parallel profiling")
     parser.add_argument("--power_profile_file", help="Path to power profile file")
 
     parser.add_argument(
